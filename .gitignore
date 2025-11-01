@@ -70,5 +70,5 @@ Reports/*
 *.pdb
 *.pch
 .vs/
-WinApiCalc/
+rxcc/
 x64/Debug/
