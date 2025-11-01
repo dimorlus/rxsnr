@@ -786,7 +786,7 @@ int main(int argc, char* argv[])
                                 if (SR[sri] && SR[sri]->search(istr))
                                 {
                                     si = 0;
-                                    strcpy(ostr, istr);
+                                    //strcpy(ostr, istr);
                                     SR[sri]->replace(ostr);
                                     if (ostr[0]) uwritestr(in_code, out_code, ostr, false, Out);
                                     if (br) break;
@@ -803,7 +803,7 @@ int main(int argc, char* argv[])
                         {
                             if (SR[sri] && SR[sri]->search(istr))
                             {
-                                strcpy(ostr, istr);
+                                //strcpy(ostr, istr);
                                 SR[sri]->replace(ostr);
                                 if (ostr[0]) uwritestr(in_code, out_code, ostr, true, Out);
                                 if (br) break;
