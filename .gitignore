@@ -70,5 +70,5 @@ Reports/*
 *.pdb
 *.pch
 .vs/
-rxcc/
+rxsnr/
 x64/Debug/
