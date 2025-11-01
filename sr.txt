@@ -1,0 +1,10 @@
+;This file contains search, replace, and initial counter value divided by slash
+;/<wpt lat="([0-9\.]+)".*lon="([0-9\.]+)".*<name>(.*)<//name>/%d|@Favourites|\2||\0|\1|_ROM||_ROM|||\2|Unnamed road|||||\n/8
+
+/.*/;&/
+/([0-9\.]+);([0-9\.]+);;(.*);;;"?([^;^"]+)"?;;;;+[^;]/%d|@Favourites|\3||\0|\1|_ROM||_ROM|||\3|Unnamed road|||||/8
+;/.*/&/
+;/.*\n/&/
+
+;/.*/&/
+
