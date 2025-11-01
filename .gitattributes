@@ -1,0 +1,24 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# C++ source files should use CRLF on Windows
+*.cpp text eol=crlf
+*.h text eol=crlf
+*.c text eol=crlf
+*.hpp text eol=crlf
+
+# Project files
+*.vcxproj text eol=crlf
+*.sln text eol=crlf
+*.rc text eol=crlf
+
+# Documentation
+*.md text eol=crlf
+*.txt text eol=crlf
+
+# Binary files
+*.exe binary
+*.dll binary
+*.lib binary
+*.obj binary
+*.pdb binary
