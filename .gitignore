@@ -72,3 +72,5 @@ Reports/*
 .vs/
 rxsnr/
 x64/Debug/
+# Keep release executable
+!x64/Release/rxsnr.exe
