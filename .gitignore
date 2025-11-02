@@ -72,5 +72,9 @@ Reports/*
 .vs/
 rxsnr/
 x64/Debug/
+srtmp/
 # Keep release executable
 !x64/Release/rxsnr.exe
+!x64/Release/srtmp.exe
+
+

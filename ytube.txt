@@ -1,0 +1,41 @@
+<!- Header ->
+<TR>
+<td colspan="4" align="center">
+<table>
+<tr><td align="center" colspan="2"><strong><a href="..//Index.htm#Y2017_2">Home<//a><//strong><//td><//tr>
+<tr><td align="center" colspan="2">&nbsp;<//td><//tr>
+
+/^https:////www.youtube.com//playlist.+$/<!- playlist -><tr><td align="center" colspan="2"><strong>Video <a href="&">(Playlist)<//a><//strong><//td><//tr>/
+
+/^([0-9]+) +https:////youtu.be//(.+) +([0-9]+) +https:////youtu.be//(.+)$/
+<!- \0 \2 ->
+<tr><td><iframe width="560" height="315" src="https:////www.youtube.com//embed//\1" frameborder="0" allowfullscreen><//iframe><//td>
+<td><iframe width="560" height="315" src="https:////www.youtube.com//embed//\3" frameborder="0" allowfullscreen><//iframe><//td><//tr>
+<tr><td align="center"><a href="https:////youtu.be//\1">Youtube \0<//a><//td><td align="center"><a href="https:////youtu.be//\3">Youtube \2<//a><//td><//tr>
+/opt1
+
+/^([0-9]+)\t+https:////youtu.be//(.+)\t+([0-9]+)\t+https:////youtu.be//(.+)$/
+<!- \0 \2 ->
+<tr><td><iframe width="560" height="315" src="https:////www.youtube.com//embed//\1" frameborder="0" allowfullscreen><//iframe><//td>
+<td><iframe width="560" height="315" src="https:////www.youtube.com//embed//\3" frameborder="0" allowfullscreen><//iframe><//td><//tr>
+<tr><td align="center"><a href="https:////youtu.be//\1">Youtube \0<//a><//td><td align="center"><a href="https:////youtu.be//\3">Youtube \2<//a><//td><//tr>
+/opt1
+
+/^([0-9]+) +https:////youtu.be//(.+)$/
+<!- \0 ->
+<tr><td  align="center" colspan="2"><iframe width="560" height="315" src="https:////www.youtube.com//embed//\1" frameborder="0" allowfullscreen><//iframe><//td><//tr>
+<tr><td  align="center" colspan="2"><a href="https:////youtu.be//\1">Youtube \0<//a><//td><//tr>
+/opt2
+
+/^([0-9]+)\t +https:////youtu.be//(.+)$/
+<!- \0 ->
+<tr><td  align="center" colspan="2"><iframe width="560" height="315" src="https:////www.youtube.com//embed//\1" frameborder="0" allowfullscreen><//iframe><//td><//tr>
+<tr><td  align="center" colspan="2"><a href="https:////youtu.be//\1">Youtube \0<//a><//td><//tr>
+/opt2
+/ / /
+
+<!- Footer ->
+<tr><td align="center" colspan="2"><strong><a href="..//index.htm#Y2017_2">Home<//a><//strong><//td><//tr>
+<//table><//td><//TR>
+<!- End ->
+

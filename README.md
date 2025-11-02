@@ -331,3 +331,411 @@ rx_vs2022/
 ## Лицензия
 
 Copyright (c) 2014 Dmitry Orlov (dimorlus@gmail.com)
+
+---
+
+# srtmp - Template-Based Search and Replace
+
+**srtmp** is a template-based text processing utility inspired by sed/awk. It processes input files line-by-line using multiple template rules, applying replacements based on regular expression patterns.
+
+## Features
+
+- **Template-Based Processing**: Define multiple search/replace rules in a single template file
+- **Line-by-Line Processing**: Each line is tested against all templates sequentially
+- **First-Match Principle**: Only the first matching template is applied to each line
+- **Multi-Line Replacements**: Single matching lines can be replaced with multiple output lines
+- **Header/Footer Support**: Add static header and footer sections to output
+- **Regular Expression Engine**: Uses the same powerful RegExp engine as rxsnr
+
+## Compilation
+
+This project has been migrated from C++Builder to **Visual Studio 2022**.
+
+### Requirements
+- Visual Studio 2022 (v143 toolset)
+- Windows SDK 10.0
+- C++17 standard support
+
+### Build Instructions
+```bash
+# Open Developer Command Prompt for VS 2022
+cd rx_vs2022
+msbuild srtmp.sln /p:Configuration=Release /p:Platform=x64
+```
+
+Or open `srtmp.sln` in Visual Studio 2022 and build the solution.
+
+## Usage
+
+### Command Line Syntax
+
+```bash
+srtmp [-t] -f template.txt input.txt [+]output.txt
+```
+
+### Options
+
+- `-f` - Specify template file (required)
+- `-t` - Do not replace tabs with spaces (optional)
+- `-h` - Show help screen
+- `-H` - Show full help with regular expression syntax
+- `+output.txt` - Append to output file instead of overwriting
+
+### Template File Format
+
+The template file has the following structure:
+
+```
+Optional header section
+(copied once to the beginning of output)
+
+/regexp1/replacement1/
+/regexp2/replacement2
+line2
+line3/
+/regexp3/replacement3/
+
+Optional footer section
+(copied once to the end of output)
+```
+
+**Format Rules:**
+- Templates are delimited by `/` characters
+- A template consists of:
+  - `/regexp/` - Regular expression pattern to match
+  - `replacement` - Replacement text (can span multiple lines)
+  - `/` - Optional closing delimiter
+- The replacement section can contain multiple lines
+- Lines before the first template become the header
+- Lines after the last template become the footer
+- Each input line is tested against templates in order
+- Only the first matching template is applied to each line
+
+### Template Examples
+
+#### Simple Replacement
+```
+/error/ERROR/
+/warning/WARNING/
+```
+
+#### Multi-Line Replacement
+```
+/function (\w+)\(/Function: \1
+Parameters:
+/
+```
+
+#### With Header and Footer
+```
+HTML Report
+<html><body>
+
+/error/(.*)//<div class="error">\1</div>/
+/warning/(.*)//<div class="warn">\1</div>/
+
+</body></html>
+```
+
+## Processing Algorithm
+
+1. **Load template file**: Parse header, templates, and footer sections
+2. **Process input**: Read input file line by line
+3. **Match templates**: For each line, test against all templates in order
+4. **Apply replacement**: When a match is found:
+   - Apply the replacement pattern
+   - Output the result (possibly multiple lines)
+   - Skip remaining templates for this line
+5. **Output**: Write header, processed lines, and footer
+
+## Examples
+
+### Example 1: Log File Processing
+```bash
+# Create template file
+cat > log_template.txt << 'EOF'
+Log Processing Report
+==================
+
+/ERROR/(.*)/[!] ERROR: \1/
+/WARN/(.*)/[*] Warning: \1/
+/INFO/(.*)/[i] Info: \1/
+
+==================
+End of Report
+EOF
+
+# Process log file
+srtmp -f log_template.txt server.log report.txt
+```
+
+### Example 2: Code Comment Conversion
+```bash
+# Convert C++ comments to Python comments
+cat > cpp2py.txt << 'EOF'
+/\/\/(.*)/# \1/
+/\/\*(.*)$/# \1/
+/(.*)\*\//# \1/
+EOF
+
+srtmp -f cpp2py.txt code.cpp code.py
+```
+
+### Example 3: Data Transformation
+```bash
+# Transform CSV to formatted text
+cat > csv_format.txt << 'EOF'
+Data Report
+-----------
+
+/(\w+),(\w+),(\d+)/Name: \1 \2, Age: \3/
+
+-----------
+EOF
+
+srtmp -f csv_format.txt data.csv report.txt
+```
+
+## Regular Expression Syntax
+
+srtmp uses the same regular expression engine as rxsnr. See the rxsnr section above for complete syntax reference.
+
+## Differences from rxsnr
+
+| Feature | rxsnr | srtmp |
+|---------|-------|-------|
+| Input method | Command line or file | Template file only |
+| Processing | All patterns to all lines | First match only per line |
+| Multi-line replacement | No | Yes |
+| Header/Footer | No | Yes |
+| Tab handling | N/A | Optional (-t flag) |
+| Output encoding | Multiple options | Standard output |
+
+## Project Structure
+
+```
+rx_vs2022/
+├── srtmp.cpp         # Main application source
+├── RegExpClass.h     # Regular expression engine header
+├── RegExpClass.cpp   # Regular expression engine implementation
+├── srtmp.vcxproj     # Visual Studio project file
+├── srtmp.sln         # Visual Studio solution file
+└── srtmp.txt         # Template format documentation
+```
+
+## Use Cases
+
+- **Log file processing**: Convert raw logs to formatted reports
+- **Code transformation**: Convert between code styles or languages
+- **Data formatting**: Transform structured data into readable formats
+- **Report generation**: Add headers, footers, and formatting to data
+- **Text cleanup**: Apply multiple cleanup rules in a single pass
+- **Template expansion**: Generate output from template-based input
+
+## License
+
+Copyright (c) 2017, 2019 Dmitry Orlov (dimorlus@gmail.com)
+
+---
+
+# srtmp - Шаблонный Поиск и Замена
+
+**srtmp** — утилита для обработки текста на основе шаблонов, вдохновлённая sed/awk. Обрабатывает входные файлы построчно, используя множественные правила шаблонов и применяя замены на основе регулярных выражений.
+
+## Возможности
+
+- **Обработка на основе шаблонов**: Определение множественных правил поиска/замены в одном файле шаблонов
+- **Построчная обработка**: Каждая строка проверяется последовательно на соответствие всем шаблонам
+- **Принцип первого совпадения**: К каждой строке применяется только первый совпавший шаблон
+- **Многострочные замены**: Одна совпавшая строка может быть заменена на несколько строк вывода
+- **Поддержка заголовка/подвала**: Добавление статических секций заголовка и подвала к выводу
+- **Движок регулярных выражений**: Использует тот же мощный движок RegExp, что и rxsnr
+
+## Компиляция
+
+Этот проект был перенесен с C++Builder на **Visual Studio 2022**.
+
+### Требования
+- Visual Studio 2022 (набор инструментов v143)
+- Windows SDK 10.0
+- Поддержка стандарта C++17
+
+### Инструкции по сборке
+```bash
+# Откройте командную строку разработчика для VS 2022
+cd rx_vs2022
+msbuild srtmp.sln /p:Configuration=Release /p:Platform=x64
+```
+
+Или откройте `srtmp.sln` в Visual Studio 2022 и соберите решение.
+
+## Использование
+
+### Синтаксис командной строки
+
+```bash
+srtmp [-t] -f шаблон.txt входной.txt [+]выходной.txt
+```
+
+### Опции
+
+- `-f` - Указать файл шаблонов (обязательно)
+- `-t` - Не заменять табуляции на пробелы (опционально)
+- `-h` - Показать экран справки
+- `-H` - Показать полную справку с синтаксисом регулярных выражений
+- `+выходной.txt` - Добавить к выходному файлу вместо перезаписи
+
+### Формат файла шаблонов
+
+Файл шаблонов имеет следующую структуру:
+
+```
+Опциональная секция заголовка
+(копируется один раз в начало вывода)
+
+/регвыр1/замена1/
+/регвыр2/замена2
+строка2
+строка3/
+/регвыр3/замена3/
+
+Опциональная секция подвала
+(копируется один раз в конец вывода)
+```
+
+**Правила формата:**
+- Шаблоны разделяются символами `/`
+- Шаблон состоит из:
+  - `/регвыр/` - Шаблон регулярного выражения для сопоставления
+  - `замена` - Текст замены (может занимать несколько строк)
+  - `/` - Опциональный закрывающий разделитель
+- Секция замены может содержать несколько строк
+- Строки перед первым шаблоном становятся заголовком
+- Строки после последнего шаблона становятся подвалом
+- Каждая входная строка проверяется на соответствие шаблонам по порядку
+- К каждой строке применяется только первый совпавший шаблон
+
+### Примеры шаблонов
+
+#### Простая замена
+```
+/ошибка/ОШИБКА/
+/предупреждение/ПРЕДУПРЕЖДЕНИЕ/
+```
+
+#### Многострочная замена
+```
+/функция (\w+)\(/Функция: \1
+Параметры:
+/
+```
+
+#### С заголовком и подвалом
+```
+HTML Отчёт
+<html><body>
+
+/ошибка/(.*)//<div class="error">\1</div>/
+/предупреждение/(.*)//<div class="warn">\1</div>/
+
+</body></html>
+```
+
+## Алгоритм обработки
+
+1. **Загрузка файла шаблонов**: Разбор секций заголовка, шаблонов и подвала
+2. **Обработка входа**: Чтение входного файла построчно
+3. **Сопоставление шаблонов**: Для каждой строки проверка на соответствие всем шаблонам по порядку
+4. **Применение замены**: При обнаружении совпадения:
+   - Применение шаблона замены
+   - Вывод результата (возможно, несколько строк)
+   - Пропуск остальных шаблонов для этой строки
+5. **Вывод**: Запись заголовка, обработанных строк и подвала
+
+## Примеры
+
+### Пример 1: Обработка лог-файла
+```bash
+# Создать файл шаблонов
+cat > log_template.txt << 'EOF'
+Отчёт обработки лога
+====================
+
+/ERROR/(.*)/[!] ОШИБКА: \1/
+/WARN/(.*)/[*] Предупреждение: \1/
+/INFO/(.*)/[i] Информация: \1/
+
+====================
+Конец отчёта
+EOF
+
+# Обработать лог-файл
+srtmp -f log_template.txt server.log report.txt
+```
+
+### Пример 2: Преобразование комментариев в коде
+```bash
+# Конвертировать комментарии C++ в Python
+cat > cpp2py.txt << 'EOF'
+/\/\/(.*)/# \1/
+/\/\*(.*)$/# \1/
+/(.*)\*\//# \1/
+EOF
+
+srtmp -f cpp2py.txt code.cpp code.py
+```
+
+### Пример 3: Трансформация данных
+```bash
+# Преобразовать CSV в форматированный текст
+cat > csv_format.txt << 'EOF'
+Отчёт по данным
+---------------
+
+/(\w+),(\w+),(\d+)/Имя: \1 \2, Возраст: \3/
+
+---------------
+EOF
+
+srtmp -f csv_format.txt data.csv report.txt
+```
+
+## Синтаксис регулярных выражений
+
+srtmp использует тот же движок регулярных выражений, что и rxsnr. См. секцию rxsnr выше для полного справочника по синтаксису.
+
+## Отличия от rxsnr
+
+| Функция | rxsnr | srtmp |
+|---------|-------|-------|
+| Метод ввода | Командная строка или файл | Только файл шаблонов |
+| Обработка | Все шаблоны ко всем строкам | Только первое совпадение на строку |
+| Многострочная замена | Нет | Да |
+| Заголовок/Подвал | Нет | Да |
+| Обработка табуляции | Н/Д | Опционально (флаг -t) |
+| Кодировка вывода | Множественные опции | Стандартный вывод |
+
+## Структура проекта
+
+```
+rx_vs2022/
+├── srtmp.cpp         # Исходный код основного приложения
+├── RegExpClass.h     # Заголовочный файл движка регулярных выражений
+├── RegExpClass.cpp   # Реализация движка регулярных выражений
+├── srtmp.vcxproj     # Файл проекта Visual Studio
+├── srtmp.sln         # Файл решения Visual Studio
+└── srtmp.txt         # Документация по формату шаблонов
+```
+
+## Варианты использования
+
+- **Обработка лог-файлов**: Преобразование сырых логов в форматированные отчёты
+- **Трансформация кода**: Преобразование между стилями кода или языками
+- **Форматирование данных**: Преобразование структурированных данных в читаемые форматы
+- **Генерация отчётов**: Добавление заголовков, подвалов и форматирования к данным
+- **Очистка текста**: Применение множественных правил очистки за один проход
+- **Развёртывание шаблонов**: Генерация вывода из входных данных на основе шаблонов
+
+## Лицензия
+
+Copyright (c) 2017, 2019 Dmitry Orlov (dimorlus@gmail.com)
